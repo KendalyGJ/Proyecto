@@ -1,6 +1,5 @@
 
-import java.util.Scanner;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Sopa De Letras
@@ -8,16 +7,31 @@ import java.util.Random;
  * @author Jordan Obando, Kendaly Grijalba Jiménez.
  * @version 13/05/2023
  */
-public class SopaDeLetras {
+public class SopaDeLetrasGit {
     
     public static void main(String[] args) {//Método principal, donde se llama los métodos y se crea el arreglo y matriz.
         Scanner entrada = new Scanner(System.in);
         int maximoPalabras = 10;
         String[] palabras = pedirPalabras(entrada, maximoPalabras);
         ImprimirPalabras(palabras);
-        char[][]matriz = CrearSopaDeLetras(palabras);
+        boolean seguir=true;
+        int respuesta;
+        while(seguir){
+            char[][]matriz = CrearSopaDeLetras(palabras);
         
-        ImprimirSopaDeLetras(LlenarSopaDeLetras(matriz));
+            ImprimirSopaDeLetras(LlenarSopaDeLetras(matriz));
+            System.out.println();
+            System.out.println("Ingrese 1 para revolver las palabras\nIngrese 2 para terminar el juego");
+            respuesta=entrada.nextInt();
+            if(respuesta==1){
+                System.out.println("\f");
+                ImprimirPalabras(palabras);
+                continue;
+            }else if(respuesta==2){
+                seguir=false;
+            }
+        }
+        
     }
     
     public static String[] pedirPalabras(Scanner entrada, int maxPalabras){
@@ -55,23 +69,78 @@ public class SopaDeLetras {
                 tamaño=palabras[i].length(); // El tamaño se va actualizando con la palabra más grande hasta que se recorra todo el arreglo de palabras.
             }
         }
-
-        char[][] matriz = new char[tamaño * 2][tamaño * 2];
-
+        char[][] matriz = new char[20][20];
         for(int i=0;i<matriz.length;i++){
             for(int j=0;j<matriz[0].length;j++){
                 matriz[i][j]='*';
             }
         }
-        for (int i = 0; i < palabras.length; i++) {
-            String palabraActual = palabras[i].toLowerCase(); 
-            for (int j = 0; j < palabraActual.length(); j++) {
-                if (j < matriz[i].length) {
-                    matriz[i][j] = palabraActual.charAt(j);
-                }
+        
+        Random rand=new Random();
+        int randFilas;
+        boolean seguir=true;
+        int randCol;
+        int posicion;
+        int contarPalabras=0;
+        
+        for(int i=0;i<palabras.length;i++){
+            String palabraActual=palabras[i].toUpperCase();
+            int contador=0;
+            seguir=true;
+            
+            posicion=rand.nextInt(2);//decidir si va a ir horizontal, vertical o diagonal
+            switch(posicion){
+                case 0:
+                    while(seguir){
+                        contador=0;
+                        randFilas=rand.nextInt(matriz.length);
+                        randCol=rand.nextInt(matriz[0].length);
+                        if(matriz[0].length-randCol>=palabraActual.length()){//preguntar si la palabra cabe
+                            for(int j=randCol;j<randCol+palabraActual.length();j++){//ver si esos campos estan vacios
+                                
+                                if(matriz[randFilas][j]=='*'|| matriz[randFilas][j]==palabraActual.charAt(contarPalabras)){
+                                    contador++;
+                                }
+                                System.out.println(contarPalabras);
+                                contarPalabras++;
+                            }
+                            if(contador==palabraActual.length()){//si estan vacios entonces se ingresa la palabra
+                                contador=0;
+                                for(int c=randCol;c<randCol+palabraActual.length();c++){
+                                    matriz[randFilas][c]=palabraActual.charAt(contador);
+                                    contador++;
+                                }
+                                seguir=false;
+                            }
+                        }
+                    }
+                    break;
+                case 1:
+                    while(seguir){
+                        randFilas=rand.nextInt(matriz.length);
+                        randCol=rand.nextInt(matriz[0].length);
+                        if(matriz.length-randFilas>=palabraActual.length()){
+                            for(int j=randFilas;j<randFilas+palabraActual.length();j++){
+                                if(matriz[j][randCol]=='*'){
+                                    contador++;
+                                }
+                            }
+                            if(contador==palabraActual.length()){
+                                contador=0;
+                                for(int c=randFilas;c<randFilas+palabraActual.length();c++){
+                                    matriz[c][randCol]=palabraActual.charAt(contador);
+                                    contador++;
+                                }
+                                seguir=false;
+                            }
+                        }
+                    }
+                    break;
+                case 2:
+                    System.out.println("aun no :(((");
+                    break;
             }
         }
-        
         
         return matriz;// Se devuelve la matriz creada.
     }
@@ -106,5 +175,4 @@ public class SopaDeLetras {
             System.out.println("|");
         }
     }
-
 }

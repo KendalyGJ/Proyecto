@@ -7,7 +7,7 @@ import java.util.Random;
  * @author Jordan Obando, Kendaly Grijalba Jiménez.
  * @version 13/05/2023
  */
-public class dh {
+public class Sopa {
     public static void main(String[] args) {//Método principal, donde se llama los métodos y se crea el arreglo y matriz.
 
         Scanner entrada = new Scanner(System.in);

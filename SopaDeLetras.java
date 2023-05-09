@@ -115,7 +115,7 @@ public class Metodos {
             }
         }
 
-        char[][] matriz = new char[tamaño * 2][tamaño * 2];
+        char[][] matriz = new char[tamaño * 5][tamaño * 5];
 
         for(int i=0;i<matriz.length;i++){
             for(int j=0;j<matriz[0].length;j++){

@@ -7,13 +7,12 @@ import java.util.Random;
  * @author Jordan Obando, Kendaly Grijalba Jiménez.
  * @version 13/05/2023
  */
-public class SopaDeLetras {
-
+public class dh {
     public static void main(String[] args) {//Método principal, donde se llama los métodos y se crea el arreglo y matriz.
 
         Scanner entrada = new Scanner(System.in);
         int maximoPalabras = 10;
-        String[] palabras = OpcionDePalabras( entrada,maximoPalabras);
+        String[] palabras = OpcionDePalabras(entrada,maximoPalabras);
 
         boolean seguir=true;
         int respuesta;
@@ -29,6 +28,7 @@ public class SopaDeLetras {
                 ImprimirPalabras(palabras);
                 continue;
             }else if(respuesta==2){
+                System.out.println("Fin del juego");
                 seguir=false;
             }
         }
@@ -44,7 +44,7 @@ public class SopaDeLetras {
         if (opcion == 1) {//Si es opción "1", el usuario agrega las palabras.Llamando al método PedirPalbras
             palabras = PedirPalabras(entrada, maximoPalabras);
         } else if (opcion == 2) {//Si es la opción "2", se escoge 10 palabras aleatoriamente del banco de palabras.
-            palabras = BancoPalabras(maximoPalabras);
+            palabras = BancoPalabras(entrada,maximoPalabras);
         } else {//Si agrega un caracter invalido , se despliega esta instrucción.
             System.out.println("Por favor, ingrese una opción válida");
             return null;
@@ -54,13 +54,20 @@ public class SopaDeLetras {
         return palabras;//Regresa el arreglo palabras.
     }
 
-    public static String[] BancoPalabras(int maximoPalabras){//Método que recibe como parámetro el tope de palabras.Se encarga de guardar palabras ya seleccionadas para el usuario.
+    public static String[] BancoPalabras(Scanner entrada,int maximoPalabras){//Método que recibe como parámetro el tope de palabras.Se encarga de guardar palabras ya seleccionadas para el usuario.
         //Banco de palabras, guardadas en un arreglo de String.
-        String[] banco = new String[]{"Película", "Actor", "Actriz", "Director", "Guion", "Producción", "Montaje", "Maquillaje", "Vestuario", "Iluminación", "Escenario", "Banda sonora", "Estreno", "Taquilla", "Premio", "Reparto", "Protagonista", "Personaje", "Escena", "Secuencia", "Cámara", "Lente", "Enfoque", "Plano", "Cortometraje", "Trama", "Acción", "Comedia", "Drama", "Terror"};
-        String[] palabras = new String[maximoPalabras];// Arreglo de String, que crea el tamaño en base al tope (maximoPalabras).
+        String[] banco = new String[]{"Película", "Actor", "Actriz", "Director", "Guion", "Producción", "Montaje", "Maquillaje", "Vestuario", "Iluminación", "Escenario", "Filmación", "Estreno", "Taquilla", "Premio", "Reparto", "Protagonista", "Personaje", "Escena", "Secuencia", "Cámara", "Lente", "Enfoque", "Plano", "Cortometraje", "Trama", "Acción", "Comedia", "Drama", "Terror"};
+        System.out.println("Ingrese el número de palabras que desea en la sopa de letras (máximo " + maximoPalabras + "): ");
+        int cantidadPalabras = entrada.nextInt();
+        while (cantidadPalabras > maximoPalabras) {//Bucle que permite ingresar las palabras hasta el tope
+            System.out.println("La cantidad de palabras ingresada supera el límite de " + maximoPalabras + " palabras. Por favor, ingrese un número válido: ");
+            cantidadPalabras = entrada.nextInt();
+        }
+
+        String[] palabras = new String[cantidadPalabras];// Arreglo de String, que crea el tamaño en base al tope (maximoPalabras).
         int palabrasSeleccionadas = 0;//Variable que se utiliza como contador con las palabras ya escogidas para usar en la sopa de letras.
-        Random rand = new Random();// Objeto Random
-        while(palabrasSeleccionadas < maximoPalabras){//Se utiliza para seleccionar palabras aleatorias hasta que llegue al tope.
+        Random rand = new Random();// Objeto Random.
+        while(palabrasSeleccionadas < cantidadPalabras){//Se utiliza para seleccionar palabras aleatorias hasta que llegue al tope.
             int indice = rand.nextInt(banco.length);//En cada iteración del bucle, se seleccionada una palabra aleatoria.
             boolean palabraRepetida = false;// Variable que servirá para ver si es repetida.
             for(int i = 0; i < palabrasSeleccionadas; i++){//Se utiliza un for para ver si la palabra ya se ha escogido anteriormente.
@@ -95,7 +102,7 @@ public class SopaDeLetras {
             }
         }
         System.out.print("\f");
-        String[]palabras=palab.substring(0,palab.length()-1).split("-");// S eutiliza para obtener la cadena de texto sin el ultimo caracter "-", y el split() es para dividir la cadena de texto en un arreglo de palabras.
+        String[]palabras = palab.substring(0,palab.length()-1).split("-");// Se  utiliza para obtener la cadena de texto sin el ultimo caracter "-", y el split() es para dividir la cadena de texto en un arreglo de palabras.
         return palabras;//Regresa un arreglo.
     }
 
@@ -104,7 +111,7 @@ public class SopaDeLetras {
         for (int i = 0; i < palabras.length; i++) {// Recorre el arreglo hasta que se impriman todas las palabras ingresadas.
             System.out.println( (i+1)+"-"+palabras[i]);
         }
-        System.out.println();
+        
     }
 
     public static char[][] CrearSopaDeLetras(String[] palabras){//Método que recibe como párametro el arreglo de palabras, el cual  crea una matriz con las palabras adentro.
@@ -115,7 +122,7 @@ public class SopaDeLetras {
             }
         }
 
-        char[][] matriz = new char[tamaño * 5][tamaño * 5];
+        char[][] matriz = new char[tamaño * 2][tamaño * 2];
 
         for(int i=0;i<matriz.length;i++){
             for(int j=0;j<matriz[0].length;j++){
@@ -134,14 +141,13 @@ public class SopaDeLetras {
             int contador;
             seguir=true;//Significa que todavía no se ha encontrado una posición adecuada.
 
-            posicion=rand.nextInt(2);//decidir si va a ir horizontal, vertical o diagonal
+            posicion=rand.nextInt(3);//decidir si va a ir horizontal, vertical o diagonal
             switch(posicion){//Ver casos
                 case 0:
                     //Variables que sirven para limitar los intentos para colocar la palabra en una posición adecuada.
                     contador = 0;
                     int contarPalabras=0; 
                     while(seguir){
-
                         randFilas=rand.nextInt(matriz.length);//En la fila aleatoria en que se coloca la palabra
                         randCol=rand.nextInt(matriz[0].length - palabraActual.length() +1);//En la columna aleatoria en que se coloca.
                         for (int j = randCol; j < randCol + palabraActual.length(); j++) {//Bucle que se efectua atravez de la longitud de la palabra.
@@ -164,7 +170,6 @@ public class SopaDeLetras {
                             contarPalabras = 0;
                             contador = 0;
                         }
-
                         // Si se hacen demasiados intentos sin éxito, se devuelve una matriz vacía
                         if (contarPalabras > 200) {
                             return new char[0][0];
@@ -173,9 +178,10 @@ public class SopaDeLetras {
                     break;
                 case 1: // Vertical, en este caso es similar, solamente, se recorre cada letra de la palabra en la columna.
                     contador = 0;
+                    contarPalabras = 0;
                     while (seguir) {
-                        randFilas = rand.nextInt(matriz.length - palabraActual.length() + 1);
-                        randCol = rand.nextInt(matriz[0].length);
+                        randFilas = rand.nextInt(matriz.length - palabraActual.length() + 1);// Aleatoriamente en una fila menos la palabra actual.
+                        randCol = rand.nextInt(matriz[0].length);//Aleatoriamente en una columna.
                         for (int j = randFilas; j < randFilas + palabraActual.length(); j++) {
                             if (matriz[j][randCol] == '*') {
                                 contador++;
@@ -197,7 +203,30 @@ public class SopaDeLetras {
                     }
                     break;
                 case 2: // Diagonal
-                    System.out.println("aun no :(((");
+                    contador = 0;
+                    contarPalabras = 0;
+                    while(seguir){//Bucle while, se ejecuta hasta que la variable "seguir" sea verdadera.
+                        randFilas = rand.nextInt(matriz.length - palabraActual.length() + 1);//Aleatoriamente en una fila menos la palabra actual.
+                        randCol = rand.nextInt(matriz[0].length - palabraActual.length() - 1);//Aleatoriamente en una columna menos la longitud de la palabra.
+                        for(int j = 0; j < palabraActual.length();j++){//Verifica si la palabra se puede insertar en la posicion seleccionada.
+                            if(matriz[randFilas + j][randCol + j]== '*'  || matriz[randFilas + j][randCol + j] == palabraActual.charAt(j)){//Verifica si la letra en la posición es un * o si es igual a la letra correspondiente de la palabra actual.
+                                contador++; //Si se cumple alguna,  se incrementa a 1. 
+                            }else{//Sino se sale del bucle y el contador se reinicia a 0.
+                                contador = 0;
+                                break;
+                            }
+                        }
+                        if(contador == palabraActual.length()){//Si el contador alcanza la longitud de la palabra, es porque se ha encontrado una posición valida.
+                            contador = 0;//Se reinicia el contador a 0.
+                            for(int c = 0; c < palabraActual.length();c++){//INsertar la palabra a la matriz.
+                                matriz[randFilas + c][randCol + c] = palabraActual.charAt(contador);
+                                contador++;
+                            }
+                            seguir = false;//Sale del bucle while.
+                        }else{
+                            contador = 0;//Sino se continua con while, reiniciando el contador a 0.
+                        }
+                    }
                     break;
             }
         }
